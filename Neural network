@@ -1,0 +1,64 @@
+import math
+
+
+def sigmoid(x):
+    return 1 / (1 + math.exp(-x))
+
+
+def sigmoid_derivative(x):
+    return x * (1 - x)
+
+
+
+input_1, input_2 = 0, 1 
+target_output = 1 
+
+weight_input_hidden_1_1 = 0.5
+weight_input_hidden_1_2 = 0.3
+weight_input_hidden_2_1 = -0.9
+weight_input_hidden_2_2 = 0.05
+bias_hidden_1 = -0.4
+bias_hidden_2 = 0.3
+
+
+weight_hidden_output_1 = 0.4
+weight_hidden_output_2 = 0.3
+bias_output = 1
+
+
+learning_rate = 0.01
+epochs = int(input("Enter the number of epochs: "))
+
+
+for epoch in range(epochs):
+
+    hidden_1_output = sigmoid(input_1 * weight_input_hidden_1_1 + input_2 * weight_input_hidden_2_1 + bias_hidden_1)
+    hidden_2_output = sigmoid(input_1 * weight_input_hidden_1_2 + input_2 * weight_input_hidden_2_2 + bias_hidden_2)
+    final_output = sigmoid(hidden_1_output * weight_hidden_output_1 + hidden_2_output * weight_hidden_output_2 + bias_output)
+
+
+    error = target_output - final_output
+
+
+    delta_output = error * sigmoid_derivative(final_output)
+
+   
+    weight_hidden_output_1 += learning_rate * delta_output * hidden_1_output
+    weight_hidden_output_2 += learning_rate * delta_output * hidden_2_output
+    bias_output += learning_rate * delta_output
+
+    delta_hidden_1 = delta_output * weight_hidden_output_1 * sigmoid_derivative(hidden_1_output)
+    delta_hidden_2 = delta_output * weight_hidden_output_2 * sigmoid_derivative(hidden_2_output)
+
+    weight_input_hidden_1_1 += learning_rate * delta_hidden_1 * input_1
+    weight_input_hidden_2_1 += learning_rate * delta_hidden_1 * input_2
+    bias_hidden_1 += learning_rate * delta_hidden_1
+
+    weight_input_hidden_1_2 += learning_rate * delta_hidden_2 * input_1
+    weight_input_hidden_2_2 += learning_rate * delta_hidden_2 * input_2
+    bias_hidden_2 += learning_rate * delta_hidden_2
+
+    print(f"Epoch {epoch + 1}/{epochs}, Error: {error:.6f}")
+
+
+print(f"\nFinal Output after {epochs} epochs: {final_output:.6f}")
